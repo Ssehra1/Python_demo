@@ -40,7 +40,7 @@ jobs:
         continue-on-error: true
         run: |
           python -m ruff check --output-format=github --target-version=py310 .
-
+ 
       - name: Test with pytest
         run: |
           python -m coverage run -m pytest -v -s
