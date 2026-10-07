@@ -1,12 +1,50 @@
-Run coverage run -m pytest  -v -s  
-  coverage run -m pytest  -v -s  
-  shell: /usr/bin/bash -e {0}
-  env:
-    pythonLocation: /opt/hostedtoolcache/Python/3.10.21/x64
-    PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.21/x64/lib/pkgconfig
-    Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
-    Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
-    Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.21/x64
-    LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.21/x64/lib
-/home/runner/work/_temp/ff97d14f-c3a2-443a-b196-a3db770e21a0.sh: line 1: coverage: command not found
-Error: Process completed with exit code 127.
+name: Run Unit Test via Pytest
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest coverage ruff
+
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+          fi
+
+      - name: Verify installed packages
+        run: |
+          python --version
+          python -m pip --version
+          python -m pip show coverage
+          python -m coverage --version
+          python -m pytest --version
+
+      - name: Lint with Ruff
+        continue-on-error: true
+        run: |
+          python -m ruff check --output-format=github --target-version=py310 .
+
+      - name: Test with pytest
+        run: |
+          python -m coverage run -m pytest -v -s
+
+      - name: Generate Coverage Report
+        run: |
+          python -m coverage report -m
