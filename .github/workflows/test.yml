@@ -27,7 +27,8 @@ jobs:
           if [ -f requirements.txt ]; then
             python -m pip install -r requirements.txt
           fi
-
+      - name: build
+   - action: python area.py
       - name: Verify installed packages
         run: |
           python --version
