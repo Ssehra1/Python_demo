@@ -1,4 +1,4 @@
-from area import calculate_area_square, calculate_cost
+from src.area import calculate_area_square, calculate_cost
 
 
 def test_area_cost_integration():
