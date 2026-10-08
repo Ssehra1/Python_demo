@@ -28,11 +28,11 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          python -m pytest test_integration.py -v -s
+          python -m pytest tests/test_integration.py -v -s
 
       - name: Run Integration Tests with Coverage
         run: |
-          python -m coverage run -m pytest test_integration.py -v -s
+          python -m coverage run -m pytest tests/test_integration.py -v -s
 
       - name: Generate Coverage Report
         run: |
